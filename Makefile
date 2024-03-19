@@ -1,6 +1,6 @@
 CC="gcc"
 CFLAGS="-Wall"
-SDL2="`sdl2-config --cflags --libs`"
+SDL2=`sdl2-config --cflags --libs`
 
 chip8: chip8.o display.o
 	${CC} ${CFLAGS} chip8.o display.o -o chip8 ${SDL2}
