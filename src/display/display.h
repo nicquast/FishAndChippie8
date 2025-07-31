@@ -17,5 +17,5 @@ typedef Display* DisplayHandle;
 DisplayHandle createDisplay();
 
 // Delete the display and free its memory
-void freeDisplay(DisplayHandle);
+void deleteDisplay(DisplayHandle);
 #endif
