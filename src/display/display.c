@@ -10,7 +10,7 @@ DisplayHandle createDisplay() {
 		bool** display_array = display_memory;
 		offset += sizeof(bool*) * DISPLAY_WIDTH;
 
-		for (int i; i < DISPLAY_WIDTH; i++) {
+		for (int i = 0; i < DISPLAY_WIDTH; i++) {
 				display_array[i] = display_memory + offset;
 				offset += sizeof(bool) * DISPLAY_HEIGHT;
 		}
@@ -24,7 +24,7 @@ DisplayHandle createDisplay() {
 
 void deleteDisplay(DisplayHandle display_handle) {
 		//Free allocated memory
-		for (int i; i < DISPLAY_WIDTH; i++) {
+		for (int i = 0; i < DISPLAY_WIDTH; i++) {
 				free(display_handle->pixelmap[i]);
 				display_handle->pixelmap[i] = NULL;
 		}
