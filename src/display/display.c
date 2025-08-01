@@ -2,12 +2,14 @@
 #include <stdlib.h>
 
 DisplayHandle createDisplay() {
-		// Malloc contiguous block of memory for our rows of "pixels"
-		void* display_memory = malloc(sizeof(bool) * DISPLAY_WIDTH	* DISPLAY_HEIGHT);
+		// Allocate contiguous block of memory for our rows of "pixels"
+		void* display_memory = malloc(sizeof(bool) * DISPLAY_WIDTH	* DISPLAY_HEIGHT + sizeof(bool*) * DISPLAY_WIDTH);
 		int offset = 0;
 		
 
 		bool** display_array = display_memory;
+		offset += sizeof(bool*) * DISPLAY_WIDTH;
+
 		for (int i; i < DISPLAY_WIDTH; i++) {
 				display_array[i] = display_memory + offset;
 				offset += sizeof(bool) * DISPLAY_HEIGHT;
@@ -26,5 +28,9 @@ void deleteDisplay(DisplayHandle display_handle) {
 				free(display_handle->pixelmap[i]);
 				display_handle->pixelmap[i] = NULL;
 		}
+		free(display_handle->pixelmap);
 		display_handle->pixelmap = NULL;
+
+		free(display_handle);
+		display_handle = NULL;
 }
