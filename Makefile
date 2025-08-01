@@ -18,7 +18,7 @@ INC_DIRS := $(shell find $(SRC_DIR) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 $(TARGET_DIR)/$(TARGET_EXEC): $(OBJS)
-	$(CC) -o $@ $(CFLAGS) $(INC_FLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) $(INC_FLAGS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(H_FILES) #figure out a way to only add needed ones
 	$(CC) -c -o $@ $< $(CFLAGS) $(INC_FLAGS)
