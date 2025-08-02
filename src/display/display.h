@@ -1,6 +1,7 @@
 #ifndef DISPLAY_H
 #define DISPLAY_H
 
+#include <SDL3/SDL_render.h>
 #include <stdbool.h>
 
 #define DISPLAY_WIDTH 64
@@ -8,7 +9,8 @@
 #define DISPLAY_HZ 60
 
 typedef struct {
-		bool pixelmap[DISPLAY_WIDTH][DISPLAY_HEIGHT];
+    bool pixelmap[DISPLAY_WIDTH][DISPLAY_HEIGHT]; 
+    SDL_Renderer *sdl_renderer;
 } Display;
 
 typedef Display* DisplayHandle;
