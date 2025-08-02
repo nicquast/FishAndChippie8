@@ -4,7 +4,8 @@ BUILD_DIR := build
 SRC_DIR := src
 
 CC := gcc
-CFLAGS := -std=c99 -Wall -Werror
+LIBS := -lSDL3
+CFLAGS := -std=c99 -Wall -Werror $(LIBS)
 
 # Find the C source files
 SRC_FILES := $(shell find $(SRC_DIR) -name '*.c')
