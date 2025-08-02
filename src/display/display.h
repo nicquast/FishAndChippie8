@@ -8,13 +8,16 @@
 #define DISPLAY_HZ 60
 
 typedef struct {
-	bool** pixelmap;
+		bool pixelmap[DISPLAY_WIDTH][DISPLAY_HEIGHT];
 } Display;
 
 typedef Display* DisplayHandle;
 
 // Initialise a display and return a handler for it
 DisplayHandle createDisplay();
+
+// Clear the contents of a display
+void clearDisplay(DisplayHandle);
 
 // Delete the display and free its memory
 void deleteDisplay(DisplayHandle);
