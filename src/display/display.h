@@ -25,6 +25,9 @@ void clearDisplay(DisplayHandle);
 // Delete the display and free its memory
 void deleteDisplay(DisplayHandle);
 
+// Set the specified pixel to the value provided
+void setPixel(DisplayHandle display_handle, int x, int y, bool state);
+
 // Update renderer attached to display to match current pixel grid
 // Returns true if successful, false if an SDL_Error has occurred
 bool updateDisplay(DisplayHandle);
