@@ -26,19 +26,18 @@ int main() {
 	SDL_Window *window = SDL_CreateWindow(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
 	if (!window) {
 		fprintf(stderr, "Error initialising SDL3 Window: %s\n", SDL_GetError());
+		SDL_Quit();
 		return EXIT_FAILURE;
 	}
 	
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
+	SDL_Renderer *renderer = SDL_CreateRenderer(window, nullptr);
 	if (!renderer) {
 		fprintf(stderr, "Error initialising SDL3 Renderer: %s\n", SDL_GetError());
 		SDL_Quit();
+		return EXIT_FAILURE;
 	}
 
-	SDL_RenderClear(renderer);
-	SDL_RenderPresent(renderer);
-
-	SDL_Delay(5000);
+	DisplayHandle display_handle = createDisplay(renderer);
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
