@@ -1,24 +1,25 @@
-TARGET_DIR := ./bin
+TARGET_DIR := bin
 TARGET_EXEC := fnc8
-BUILD_DIR := ./build
-SRC_DIR := ./src
+BUILD_DIR := build
+SRC_DIR := src
 
 CC := gcc
-CFLAGS := -Wall -Werror
+LIBS := -lSDL3
+CFLAGS := -std=c99 -Wall -Werror $(LIBS)
 
 # Find the C source files
 SRC_FILES := $(shell find $(SRC_DIR) -name '*.c')
 H_FILES := $(shell find $(SRC_DIR) -name '*.h')
 
+SRC_FILENAMES = $(notdir $(SRC_FILES))
 # Get a list of object files from the C files found
-OBJS := $(SRC_FILES:%=$(BUILD_DIR)/%.o)
-
+OBJS := $(SRC_FILES:$(SRC_DIR)/%.c=$(BUILD_DIR)/%.o)
 # Get all subfolders/modules in src directory
-INC_DIRS := $(shell find $(SRC_DIRS) -type d)
+INC_DIRS := $(shell find $(SRC_DIR) -type d)
 INC_FLAGS := $(addprefix -I,$(INC_DIRS))
 
 $(TARGET_DIR)/$(TARGET_EXEC): $(OBJS)
-	$(CC) $(OBJS) -o $@ $^ $(CFLAGS) $(INC_FLAGS)
+	$(CC) -o $@ $^ $(CFLAGS) $(INC_FLAGS)
 
 $(BUILD_DIR)/%.o: $(SRC_DIR)/%.c $(H_FILES) #figure out a way to only add needed ones
 	$(CC) -c -o $@ $< $(CFLAGS) $(INC_FLAGS)
