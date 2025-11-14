@@ -24,3 +24,7 @@ void clearDisplay(DisplayHandle display_handle) {
 	    }
     }
 }
+
+void setPixel(DisplayHandle display_handle, const int x, const int y, const bool state) {
+    display_handle->pixelmap[x][y] = state;
+}
