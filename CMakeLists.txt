@@ -5,5 +5,7 @@ set(CMAKE_C_STANDARD 23)
 
 find_package(SDL3 REQUIRED)
 
-add_executable(FishAndChippie8 src/main.c)
+add_executable(FishAndChippie8
+        src/main.c
+        src/display/display.c)
 target_link_libraries(FishAndChippie8 PRIVATE SDL3::SDL3)

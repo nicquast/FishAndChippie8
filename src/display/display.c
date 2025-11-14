@@ -11,16 +11,16 @@ DisplayHandle createDisplay() {
 }
 
 void deleteDisplay(DisplayHandle display_handle) {
-    free(display_handle);
-    display_handle = NULL;
     SDL_DestroyRenderer(display_handle->sdl_renderer);
+    free(display_handle);
+    display_handle = nullptr;
 }
 
 // Takes the display handle and sets all pixels to 0
 void clearDisplay(DisplayHandle display_handle) {
     for (int x = 0; x < DISPLAY_WIDTH; x++) {
-	for (int y = 0; y < DISPLAY_HEIGHT; y++) {
-	    display_handle->pixelmap[x][y] = 0;
-	}
+	    for (int y = 0; y < DISPLAY_HEIGHT; y++) {
+	        display_handle->pixelmap[x][y] = 0;
+	    }
     }
 }
