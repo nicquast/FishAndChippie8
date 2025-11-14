@@ -42,6 +42,7 @@ void setPixel(DisplayHandle display_handle, const int x, const int y, const bool
 
 bool updateDisplay(DisplayHandle display_handle) {
     u_int32_t* pixelBuffer = malloc(sizeof(u_int32_t) * DISPLAY_WIDTH * DISPLAY_HEIGHT);
+    bool success = true;
 
     for (int y = 0; y < DISPLAY_HEIGHT; y++) {
         for (int x = 0; x < DISPLAY_WIDTH; x++) {
@@ -51,9 +52,10 @@ bool updateDisplay(DisplayHandle display_handle) {
         }
     }
 
-    SDL_UpdateTexture(display_handle->sdl_texture, NULL, pixelBuffer, DISPLAY_WIDTH);
+    if (!SDL_UpdateTexture(display_handle->sdl_texture, NULL, pixelBuffer, DISPLAY_WIDTH))
+        success = false;
 
     free(pixelBuffer);
 
-    return true;
+    return success;
 }
