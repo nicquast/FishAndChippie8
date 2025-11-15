@@ -13,7 +13,7 @@ bool stackIsEmpty(Stack* stack) {
     return stack->top == nullptr;
 }
 
-void stackPush(Stack* stack, u_int16_t memory_address) {
+void stackPush(Stack* stack, mem_addr_t memory_address) {
     Node* current_top = stack->top;
     Node* new_top = createNode();
     new_top->next = current_top;
@@ -21,16 +21,16 @@ void stackPush(Stack* stack, u_int16_t memory_address) {
     stack->top = new_top;
 }
 
-u_int16_t stackPop(Stack* stack) {
+mem_addr_t stackPop(Stack* stack) {
     Node* current_top = stack->top;
-    u_int16_t memory_address = current_top->memory_address;
+    mem_addr_t memory_address = current_top->memory_address;
     Node* new_top = current_top->next;
     stack->top = new_top;
     free(current_top);
     return memory_address;
 }
 
-u_int16_t stackPeek(Stack* stack) {
+mem_addr_t stackPeek(Stack* stack) {
     Node* current_top = stack->top;
     return current_top->memory_address;
 }
