@@ -7,5 +7,7 @@ find_package(SDL3 REQUIRED)
 
 add_executable(FishAndChippie8
         src/main.c
-        src/display/display.c)
+        src/display/display.c
+        src/cpu/cpu.c
+        src/cpu/cpu.h)
 target_link_libraries(FishAndChippie8 PRIVATE SDL3::SDL3)
