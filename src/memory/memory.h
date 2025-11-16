@@ -10,6 +10,6 @@
 
 typedef u_int8_t byte;
 
-byte* create_memory();
+byte* initMemory();
 
 #endif //FISHANDCHIPPIE8_MEMORY_H

@@ -5,6 +5,7 @@
 #include "cpu.h"
 
 #include <stdlib.h>
+#include <string.h>
 
 Node* createNode();
 
@@ -39,4 +40,14 @@ Node* createNode() {
     Node* node = (Node*)malloc(sizeof(Node));
     node->next = nullptr;
     return node;
+}
+
+RegisterStore initRegisterStore() {
+    RegisterStore register_store;
+    memset(register_store.gp_registers, 0, sizeof(byte_t) * NUM_REGISTERS);
+    register_store.program_counter = 0;
+    register_store.index_register = 0;
+    register_store.sound_timer = 0;
+    register_store.delay_timer = 0;
+    return register_store;
 }
