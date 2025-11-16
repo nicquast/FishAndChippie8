@@ -7,11 +7,17 @@
 
 #include "../memory/memory.h"
 #include "../cpu/cpu.h"
+#include "../display/display.h"
 
 typedef struct {
     RegisterStore register_store;
     byte* memory;
 } Chip8System;
+
+typedef struct {
+    Chip8System system;
+    pixel_t* pixel_buffer;
+} SaveState;
 
 Chip8System initChip8System();
 
