@@ -9,8 +9,10 @@
 #define DISPLAY_HEIGHT 32
 #define DISPLAY_HZ 60
 
+typedef u_int32_t pixel_t;
+
 typedef struct {
-    u_int32_t pixel_buffer[DISPLAY_WIDTH * DISPLAY_HEIGHT];
+    pixel_t pixel_buffer[DISPLAY_WIDTH * DISPLAY_HEIGHT];
     SDL_Renderer *sdl_renderer;
     SDL_Texture *sdl_texture;
 } Display;
@@ -29,7 +31,8 @@ void deleteDisplay(DisplayHandle);
 // Set the specified pixel to the value provided
 void setPixel(DisplayHandle display_handle, int x, int y, bool state);
 
-u_int32_t* getPixelBuffer(DisplayHandle display_handle);
+// Get the pixel buffer from a given display handle
+pixel_t* getPixelBuffer(DisplayHandle display_handle);
 
 // Update renderer attached to display to match current pixel grid
 // Returns true if successful, false if an SDL_Error has occurred

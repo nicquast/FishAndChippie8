@@ -37,7 +37,7 @@ void setPixel(DisplayHandle display_handle, const int x, const int y, const bool
     display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = state ? WHITE : BLACK;
 }
 
-u_int32_t* getPixelBuffer(DisplayHandle display_handle) {
+pixel_t* getPixelBuffer(DisplayHandle display_handle) {
     return display_handle->pixel_buffer;
 }
 
