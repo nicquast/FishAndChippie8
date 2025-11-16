@@ -11,5 +11,7 @@ add_executable(FishAndChippie8
         src/cpu/cpu.c
         src/cpu/cpu.h
         src/memory/memory.c
-        src/memory/memory.h)
+        src/memory/memory.h
+        src/system/system.c
+        src/system/system.h)
 target_link_libraries(FishAndChippie8 PRIVATE SDL3::SDL3)
