@@ -26,7 +26,7 @@ const byte font[FONT_SIZE] = {
     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-byte* create_memory() {
+byte* initMemory() {
     byte* memory = malloc (sizeof(byte) * 4096);
     for (int i = 0; i < FONT_SIZE; i++)
         memory[i] = font[i];
