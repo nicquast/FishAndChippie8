@@ -47,5 +47,7 @@ RegisterStore initRegisterStore() {
     memset(register_store.gp_registers, 0, sizeof(byte_t) * NUM_REGISTERS);
     register_store.program_counter = 0;
     register_store.index_register = 0;
+    register_store.sound_timer = 0;
+    register_store.delay_timer = 0;
     return register_store;
 }

@@ -31,6 +31,8 @@ typedef struct {
     mem_addr_t program_counter;
     mem_addr_t index_register;
     byte_t gp_registers[NUM_REGISTERS];
+    byte_t delay_timer;
+    byte_t sound_timer;
 } RegisterStore;
 
 RegisterStore initRegisterStore();
