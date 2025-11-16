@@ -23,58 +23,36 @@ DisplayHandle createDisplay(SDL_Renderer* renderer) {
 void deleteDisplay(DisplayHandle display_handle) {
     SDL_DestroyRenderer(display_handle->sdl_renderer);
     SDL_DestroyTexture(display_handle->sdl_texture);
+    free(display_handle->pixel_buffer);
     free(display_handle);
     display_handle = nullptr;
 }
 
 // Takes the display handle and sets all pixels to 0
 void clearDisplay(DisplayHandle display_handle) {
-    for (int x = 0; x < DISPLAY_WIDTH; x++) {
-	    for (int y = 0; y < DISPLAY_HEIGHT; y++) {
-	        display_handle->pixelmap[x][y] = 0;
-	    }
-    }
+    memset(display_handle->pixel_buffer, 0, DISPLAY_WIDTH * DISPLAY_HEIGHT);
 }
 
 void setPixel(DisplayHandle display_handle, const int x, const int y, const bool state) {
-    display_handle->pixelmap[x][y] = state;
+    display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = state ? WHITE : BLACK;
+}
+
+u_int32_t* getPixelBuffer(DisplayHandle display_handle) {
+    return display_handle->pixel_buffer;
 }
 
 bool updateDisplay(DisplayHandle display_handle) {
-    u_int32_t* pixelBuffer = malloc(sizeof(u_int32_t) * DISPLAY_WIDTH * DISPLAY_HEIGHT);
-
-    for (int y = 0; y < DISPLAY_HEIGHT; y++) {
-        for (int x = 0; x < DISPLAY_WIDTH; x++) {
-            pixelBuffer[x + y * DISPLAY_WIDTH] = display_handle->pixelmap[x][y]
-                ? WHITE
-                : BLACK;
-        }
-    }
-
-    if (!SDL_UpdateTexture(display_handle->sdl_texture, NULL, pixelBuffer, DISPLAY_WIDTH)) {
-        free(pixelBuffer);
+    if (!SDL_UpdateTexture(display_handle->sdl_texture, NULL, display_handle->pixel_buffer, DISPLAY_WIDTH))
         return false;
-    }
 
-    if (!SDL_RenderClear(display_handle->sdl_renderer)) {
-        free(pixelBuffer);
+    if (!SDL_RenderClear(display_handle->sdl_renderer))
         return false;
-    }
 
-    if (!SDL_RenderTexture(
-        display_handle->sdl_renderer,
-        display_handle->sdl_texture,
-        NULL,
-        NULL)) {
-        free(pixelBuffer);
+    if (!SDL_RenderTexture(display_handle->sdl_renderer, display_handle->sdl_texture,NULL,NULL))
         return false;
-    }
 
-    if (!SDL_RenderPresent(display_handle->sdl_renderer)) {
-        free(pixelBuffer);
+    if (!SDL_RenderPresent(display_handle->sdl_renderer))
         return false;
-    }
 
-    free(pixelBuffer);
     return true;
 }
