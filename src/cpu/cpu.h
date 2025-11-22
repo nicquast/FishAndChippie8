@@ -4,12 +4,11 @@
 
 #ifndef FISHANDCHIPPIE8_CPU_H
 #define FISHANDCHIPPIE8_CPU_H
-#include <sys/types.h>
+#include "../memory/memory.h"
 
 #define NUM_REGISTERS 16
 
-typedef u_int16_t mem_addr_t; // ToDo: 16bit int for 16 bit memory addresss - change actual type to a custom defined one later (after memory implementation)
-typedef u_int8_t byte_t;
+
 
 typedef struct Node {
     mem_addr_t memory_address;

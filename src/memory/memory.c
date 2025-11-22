@@ -7,7 +7,7 @@
 #include <stdlib.h>
 
 #define FONT_SIZE 80
-const byte font[FONT_SIZE] = {
+const byte_t font[FONT_SIZE] = {
     0xF0, 0x90, 0x90, 0x90, 0xF0, // 0
     0x20, 0x60, 0x20, 0x20, 0x70, // 1
     0xF0, 0x10, 0xF0, 0x80, 0xF0, // 2
@@ -26,8 +26,8 @@ const byte font[FONT_SIZE] = {
     0xF0, 0x80, 0xF0, 0x80, 0x80  // F
 };
 
-byte* initMemory() {
-    byte* memory = malloc (sizeof(byte) * 4096);
+byte_t* initMemory() {
+    byte_t* memory = malloc (sizeof(byte_t) * 4096);
     for (int i = 0; i < FONT_SIZE; i++)
         memory[i] = font[i];
     return memory;
