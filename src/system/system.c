@@ -17,7 +17,7 @@ instruction_t fetchInstruction(Chip8System system) {
     byte_t byte2 = system.memory[pc + 1];
 
     // Concatenate the two bytes making up an instruction
-    instruction_t instruction = byte1 << 8 | byte2;
+    instruction_t instruction = ((instruction_t)byte1 << 8) | byte2;
 
     system.register_store.program_counter += 2;
 
