@@ -8,6 +8,9 @@
 #include <stdbool.h>
 #include <stdlib.h>
 #include "display/display.h"
+#include "system/system.h"
+#include "memory/memory.h"
+#include "cpu/cpu.h"
 
 #define SDL_FLAGS SDL_INIT_VIDEO
 
@@ -38,6 +41,9 @@ int main() {
 	}
 
 	DisplayHandle display_handle = createDisplay(renderer);
+	Chip8System chip8_system = initChip8System();
+
+	
 
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
