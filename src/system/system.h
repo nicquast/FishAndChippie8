@@ -9,9 +9,11 @@
 #include "../cpu/cpu.h"
 #include "../display/display.h"
 
+typedef u_int16_t instruction_t;
+
 typedef struct {
     RegisterStore register_store;
-    byte* memory;
+    byte_t* memory;
 } Chip8System;
 
 typedef struct {
@@ -20,5 +22,8 @@ typedef struct {
 } SaveState;
 
 Chip8System initChip8System();
+
+// Fetches the next instruction and increments PC
+instruction_t fetchInstruction(Chip8System system);
 
 #endif //FISHANDCHIPPIE8_SYSTEM_H

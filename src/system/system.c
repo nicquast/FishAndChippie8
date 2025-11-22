@@ -10,3 +10,16 @@ Chip8System initChip8System() {
     system.register_store = initRegisterStore();
     return system;
 }
+
+instruction_t fetchInstruction(Chip8System system) {
+    mem_addr_t pc = system.register_store.program_counter;
+    byte_t byte1 = system.memory[pc];
+    byte_t byte2 = system.memory[pc + 1];
+
+    // Concatenate the two bytes making up an instruction
+    instruction_t instruction = byte1 << 8 | byte2;
+
+    system.register_store.program_counter += 2;
+
+    return instruction;
+}
