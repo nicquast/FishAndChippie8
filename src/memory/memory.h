@@ -8,8 +8,9 @@
 
 #define MEMORY_LENGTH 4096
 
-typedef u_int8_t byte;
+typedef u_int16_t mem_addr_t;
+typedef u_int8_t byte_t;
 
-byte* initMemory();
+byte_t* initMemory();
 
 #endif //FISHANDCHIPPIE8_MEMORY_H
