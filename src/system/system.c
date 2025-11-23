@@ -4,6 +4,13 @@
 
 #include "system.h"
 
+#define getNibble1(instruction) (instruction >> 12)
+#define getX(instruction) (instruction >> 8 & 0x0f)
+#define getY(instruction) (instruction >> 4 & 0x00f)
+#define getN(instruction) (instruction & 0x000f)
+#define getNN(instruction) (instruction & 0x00ff)
+#define getNNN(instruction) (instruction & 0x0fff)
+
 Chip8System initChip8System() {
     Chip8System system;
     system.memory = initMemory();
