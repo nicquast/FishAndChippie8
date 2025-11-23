@@ -9,6 +9,13 @@
 #include "../cpu/cpu.h"
 #include "../display/display.h"
 
+#define getNibble1(instruction) (instruction >> 12)
+#define getX(instruction) (instruction >> 8 & 0x0f)
+#define getY(instruction) (instruction >> 4 & 0x00f)
+#define getN(instruction) (instruction & 0x000f)
+#define getNN(instruction) (instruction & 0x00ff)
+#define getNNN(instruction) (instruction & 0x0fff)
+
 typedef u_int16_t instruction_t;
 
 typedef struct {
