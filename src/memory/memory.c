@@ -4,7 +4,10 @@
 
 #include "memory.h"
 
+#include <stdio.h>
 #include <stdlib.h>
+
+#define ROM_START_ADDRESS 0x200
 
 #define FONT_SIZE 80
 const byte_t font[FONT_SIZE] = {
@@ -31,4 +34,14 @@ byte_t* initMemory() {
     for (int i = 0; i < FONT_SIZE; i++)
         memory[i] = font[i];
     return memory;
+}
+
+// Note: This is technically unsafe since we could be out of bounds on the byte array if for some reason it's too small
+// I should enforce memory length more strictly at some point...
+void loadRom(FILE* rom_fp, byte_t* memory) {
+    for (int i = ROM_START_ADDRESS; i <= MEMORY_LENGTH; i++) {
+        int byte = fgetc(rom_fp);
+        if (byte == EOF) return;
+        memory[i] = (byte_t) byte;
+    }
 }
