@@ -7,7 +7,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define ROM_START_ADDRESS 0x200
 
 #define FONT_SIZE 80
 const byte_t font[FONT_SIZE] = {
