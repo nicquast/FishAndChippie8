@@ -31,6 +31,6 @@ typedef struct {
 Chip8System initChip8System();
 
 // Fetches the next instruction and increments PC
-instruction_t fetchInstruction(Chip8System system);
+instruction_t fetchInstruction(Chip8System *system);
 
 #endif //FISHANDCHIPPIE8_SYSTEM_H
