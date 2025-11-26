@@ -10,6 +10,7 @@ Chip8System initChip8System() {
     Chip8System system;
     system.memory = initMemory();
     system.register_store = initRegisterStore();
+    system.register_store.program_counter = ROM_START_ADDRESS;
     return system;
 }
 
