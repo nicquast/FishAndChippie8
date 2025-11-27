@@ -141,6 +141,7 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		break;
 	case 0xA:
 		// Set index - set I to NNN
+		system->register_store.index_register = nnn;
 		break;
 	case 0xB:
 		// Jump with offset - jump to NNN + V0
@@ -166,7 +167,6 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 				//Skip to next row if we exceed the screen width
 				if (x + j > DISPLAY_WIDTH)
 					break;
-
 
 				int bitmask = 0b1 << j;
 				int pixel = (sprite_row & bitmask) >> j;
