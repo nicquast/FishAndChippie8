@@ -31,6 +31,9 @@ void deleteDisplay(DisplayHandle);
 // Set the specified pixel to the value provided
 void setPixel(DisplayHandle display_handle, int x, int y, bool state);
 
+// Flip the specified pixel, returns 1 if it flipped a currently on pixel to off
+int flipPixel(DisplayHandle display_handle, int x, int y);
+
 // Get the pixel buffer from a given display handle
 pixel_t* getPixelBuffer(DisplayHandle display_handle);
 

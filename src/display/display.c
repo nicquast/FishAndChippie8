@@ -37,6 +37,19 @@ void setPixel(DisplayHandle display_handle, const int x, const int y, const bool
     display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = state ? WHITE : BLACK;
 }
 
+int flipPixel(DisplayHandle display_handle, const int x, const int y) {
+    switch (display_handle->pixel_buffer[x + y * DISPLAY_WIDTH]) {
+    case WHITE:
+        display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = BLACK;
+        return 1;
+    case BLACK:
+        display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = WHITE;
+        return 0;
+    default:
+        return -1;
+    }
+}
+
 pixel_t* getPixelBuffer(DisplayHandle display_handle) {
     return display_handle->pixel_buffer;
 }
