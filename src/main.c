@@ -18,7 +18,7 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 400
 
-void instructionTick(Chip8System *system);
+void instructionTick(Chip8System *system, DisplayHandle display_handle);
 
 int main(int argc, char **argv) {
 
@@ -79,13 +79,14 @@ int main(int argc, char **argv) {
 }
 
 
-void instructionTick(Chip8System *system) {
+void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 	//Fetch next instruction (also increments PC)
 	instruction_t c_inst = fetchInstruction(system);
 
 	//Deconstruct instruction
 	int x = getX(c_inst);
 	int y = getY(c_inst);
+	int n = getN(c_inst);
 	byte_t nn = getNN(c_inst);
 	mem_addr_t nnn = getNNN(c_inst);
 
@@ -148,7 +149,41 @@ void instructionTick(Chip8System *system) {
 		// Random - random number & NN and places it in VX
 		break;
 	case 0xD:
-		// Display - draw sprite - involved....
+		// Display - DXYN - Draw an N pixel tall sprite from memory location at I index register
+		// to the screen at X coord at VX and Y coord at VY, set pixels by flipping them. If we flip one from on to off
+		// by doing this set VF to 1.
+
+		// Get coordinates
+		int x_coord = system->register_store.gp_registers[x] % DISPLAY_WIDTH - 1;
+		int y_coord = system->register_store.gp_registers[y] % DISPLAY_HEIGHT - 1;
+
+		mem_addr_t sprite_address = system->register_store.index_register;
+		// For each row
+		for (int i = 0; i < n; i++) {
+			byte_t sprite_row = system->memory[sprite_address + i];
+			// For each pixel in the sprite row
+			for (int j = 7; j > 0; j--) {
+				//Skip to next row if we exceed the screen width
+				if (x + j > DISPLAY_WIDTH)
+					break;
+
+
+				int bitmask = 0b1 << j;
+				int pixel = (sprite_row & bitmask) >> j;
+
+				// Skip if the pixel in the sprite is off
+				if (pixel == 0)
+					continue;
+
+				// Flip the pixel on the display
+				int vf = flipPixel(display_handle, x_coord + i, y_coord);
+
+				// Set VF to 1 if we flipped a pixel from on to off
+				system->register_store.gp_registers[0xF] = vf;
+			}
+			y_coord++;
+		}
+
 		break;
 	case 0xE:
 		// Skip if key
