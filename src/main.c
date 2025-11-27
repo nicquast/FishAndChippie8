@@ -104,23 +104,36 @@ void instructionTick(Chip8System *system) {
 		break;
 	case 0x2:
 		// Call subroutine at NNN
+		stackPush(&system->stack, system->register_store.program_counter);
+		system->register_store.program_counter = nnn;
 		break;
 	case 0x3:
 		// Skip conditionally - Skip if VX = NN
+		if (system->register_store.gp_registers[x] == nn)
+			system->register_store.program_counter += 2;
 		break;
 	case 0x4:
 		//Skip conditionally - Skip if VX !- NN
+		if (system->register_store.gp_registers[x] != nn)
+			system->register_store.program_counter += 2;
 		break;
 	case 0x5:
 		//Skip conditionally - Skip if VX = VY
+		if (system->register_store.gp_registers[x] == system->register_store.gp_registers[y])
+			system->register_store.program_counter += 2;
 		break;
 	case 0x6:
 		//Set VX to NN
+		system->register_store.gp_registers[x] = nn;
 		break;
 	case 0x7:
 		//Add NN to VX
+		system->register_store.gp_registers[x] += nn;
+		break;
 	case 0x9:
 		//Skip conditionally - Skip if VX != VY
+		if (system->register_store.gp_registers[x] != system->register_store.gp_registers[y])
+			system->register_store.program_counter += 2;
 		break;
 	case 0x8:
 		// Arithmatic - further decoding required
