@@ -13,6 +13,15 @@ bool stackIsEmpty(Stack* stack) {
     return stack->top == nullptr;
 }
 
+void freeStack(Stack* stack) {
+    if (stack == nullptr) return;
+    while (stack->top != nullptr) {
+        Node* current_top = stack->top;
+        stackPop(stack);
+        free(current_top);
+    }
+}
+
 void stackPush(Stack* stack, mem_addr_t memory_address) {
     Node* current_top = stack->top;
     Node* new_top = createNode();
