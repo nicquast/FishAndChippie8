@@ -65,6 +65,11 @@ int main(int argc, char **argv) {
 
 	instructionTick(&chip8_system);
 
+
+	free(chip8_system.memory);
+	freeStack(&chip8_system.stack);
+	deleteDisplay(display_handle);
+
 	SDL_DestroyWindow(window);
 	SDL_DestroyRenderer(renderer);
 
@@ -95,6 +100,7 @@ void instructionTick(Chip8System *system) {
 		break;
 	case 0x1:
 		// Jump to NNN
+		system->register_store.program_counter = nnn;
 		break;
 	case 0x2:
 		// Call subroutine at NNN

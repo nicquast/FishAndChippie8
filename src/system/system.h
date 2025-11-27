@@ -18,9 +18,11 @@
 
 typedef u_int16_t instruction_t;
 
+//TODO: Move memory management duties to system and provide free function
 typedef struct {
     RegisterStore register_store;
     byte_t* memory;
+    Stack stack;
 } Chip8System;
 
 typedef struct {
