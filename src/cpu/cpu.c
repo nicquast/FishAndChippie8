@@ -36,6 +36,7 @@ mem_addr_t stackPop(Stack* stack) {
     Node* new_top = current_top->next;
     stack->top = new_top;
     free(current_top);
+    current_top = nullptr;
     return memory_address;
 }
 

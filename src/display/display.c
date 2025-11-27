@@ -23,7 +23,6 @@ DisplayHandle createDisplay(SDL_Renderer* renderer) {
 void deleteDisplay(DisplayHandle display_handle) {
     SDL_DestroyRenderer(display_handle->sdl_renderer);
     SDL_DestroyTexture(display_handle->sdl_texture);
-    free(display_handle->pixel_buffer);
     free(display_handle);
     display_handle = nullptr;
 }

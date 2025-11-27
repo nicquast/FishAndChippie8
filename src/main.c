@@ -97,6 +97,8 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 	case 0x0:
 		// Differentiate between 00E0 and 00EE and execute
 		//00E0 Clear Screen
+		if (n == 0x0)
+			clearDisplay(display_handle);
 		//00EE Return from subroutine / Pop off stack
 		break;
 	case 0x1:
