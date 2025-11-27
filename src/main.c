@@ -90,26 +90,56 @@ void instructionTick(Chip8System *system) {
 	switch (getNibble1(c_inst)) {
 	case 0x0:
 		// Differentiate between 00E0 and 00EE and execute
+		//00E0 Clear Screen
+		//00EE Return from subroutine / Pop off stack
 		break;
 	case 0x1:
-		// Jump
+		// Jump to NNN
 		break;
 	case 0x2:
-		// Call subroutine
+		// Call subroutine at NNN
 		break;
 	case 0x3:
-		// Skip conditionally
+		// Skip conditionally - Skip if VX = NN
 		break;
 	case 0x4:
-		//Skip conditionally
+		//Skip conditionally - Skip if VX !- NN
 		break;
 	case 0x5:
-		//Skip conditionally
+		//Skip conditionally - Skip if VX = VY
 		break;
+	case 0x6:
+		//Set VX to NN
+		break;
+	case 0x7:
+		//Add NN to VX
 	case 0x9:
-		//Skip conditionally
+		//Skip conditionally - Skip if VX != VY
+		break;
+	case 0x8:
+		// Arithmatic - further decoding required
+		break;
+	case 0xA:
+		// Set index - set I to NNN
+		break;
+	case 0xB:
+		// Jump with offset - jump to NNN + V0
+		break;
+	case 0xC:
+		// Random - random number & NN and places it in VX
+		break;
+	case 0xD:
+		// Display - draw sprite - involved....
+		break;
+	case 0xE:
+		// Skip if key
+		break;
+	case 0xF:
+		//Timers add to index, get key, font, binary-coded decimal conversion, store and load memory
+		// Lots of stuff going on with this first nibble...
 		break;
 	default:
+		//It shouldn't be possible to reach this
 		break;
 	}
 
