@@ -63,7 +63,7 @@ int main(int argc, char **argv) {
 
 	printf("Loaded ROM\n");
 
-	instructionTick(&chip8_system);
+	instructionTick(&chip8_system, display_handle);
 
 
 	free(chip8_system.memory);
