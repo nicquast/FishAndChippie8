@@ -29,7 +29,9 @@ void deleteDisplay(DisplayHandle display_handle) {
 
 // Takes the display handle and sets all pixels to 0
 void clearDisplay(DisplayHandle display_handle) {
-    memset(display_handle->pixel_buffer, 0, DISPLAY_WIDTH * DISPLAY_HEIGHT);
+    for (int i = 0; i < DISPLAY_WIDTH * DISPLAY_HEIGHT; i++) {
+        display_handle->pixel_buffer[i] = BLACK;
+    }
 }
 
 void setPixel(DisplayHandle display_handle, const int x, const int y, const bool state) {

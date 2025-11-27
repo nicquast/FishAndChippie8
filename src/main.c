@@ -7,6 +7,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include "display/display.h"
 #include "system/system.h"
 #include "memory/memory.h"
@@ -63,8 +64,11 @@ int main(int argc, char **argv) {
 
 	printf("Loaded ROM\n");
 
-	instructionTick(&chip8_system, display_handle);
-
+	while (true) {
+		instructionTick(&chip8_system, display_handle);
+		updateDisplay(display_handle);
+		usleep(1);
+	}
 
 	free(chip8_system.memory);
 	freeStack(&chip8_system.stack);
@@ -167,7 +171,7 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 			// For each pixel in the sprite row
 			for (int j = 7; j > 0; j--) {
 				//Skip to next row if we exceed the screen width
-				if (x + j > DISPLAY_WIDTH)
+				if (x_coord + j > DISPLAY_WIDTH)
 					break;
 
 				int bitmask = 0b1 << j;
