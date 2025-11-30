@@ -5,8 +5,8 @@
 #include <SDL3/SDL_pixels.h>
 #include <stdlib.h>
 
-#define WHITE 0xFFFFFFFF
-#define BLACK 0xFF000000
+#define ON_COLOUR 0xFFD7DEDC
+#define OFF_COLOUR 0xFF4B475C
 
 #define PIXEL_FORMAT SDL_PIXELFORMAT_ARGB8888
 
@@ -34,21 +34,21 @@ void deleteDisplay(DisplayHandle display_handle) {
 // Takes the display handle and sets all pixels to 0
 void clearDisplay(DisplayHandle display_handle) {
     for (int i = 0; i < DISPLAY_WIDTH * DISPLAY_HEIGHT; i++) {
-        display_handle->pixel_buffer[i] = BLACK;
+        display_handle->pixel_buffer[i] = OFF_COLOUR;
     }
 }
 
 void setPixel(DisplayHandle display_handle, const int x, const int y, const bool state) {
-    display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = state ? WHITE : BLACK;
+    display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = state ? ON_COLOUR : OFF_COLOUR;
 }
 
 int flipPixel(DisplayHandle display_handle, const int x, const int y) {
     switch (display_handle->pixel_buffer[x + y * DISPLAY_WIDTH]) {
-    case WHITE:
-        display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = BLACK;
+    case ON_COLOUR:
+        display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = OFF_COLOUR;
         return 1;
-    case BLACK:
-        display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = WHITE;
+    case OFF_COLOUR:
+        display_handle->pixel_buffer[x + y * DISPLAY_WIDTH] = ON_COLOUR;
         return 0;
     default:
         return -1;
@@ -60,7 +60,7 @@ void printDisplay(DisplayHandle display_handle) {
     for (int y = 0; y < DISPLAY_HEIGHT; y++) {
         for (int x = 0; x < DISPLAY_WIDTH; x++) {
             pixel_t pixel = display_handle->pixel_buffer[x + y * DISPLAY_WIDTH];
-            if (pixel == WHITE) {
+            if (pixel == ON_COLOUR) {
                 printf(" # ");
             } else {
                 printf(" _ ");
