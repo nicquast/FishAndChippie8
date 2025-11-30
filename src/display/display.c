@@ -18,6 +18,7 @@ DisplayHandle createDisplay(SDL_Renderer* renderer) {
         SDL_TEXTUREACCESS_STATIC,
         DISPLAY_WIDTH,
         DISPLAY_HEIGHT);
+    SDL_SetTextureScaleMode(display_handle->sdl_texture,SDL_SCALEMODE_NEAREST);
     return display_handle;
 }
 
