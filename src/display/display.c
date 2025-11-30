@@ -1,4 +1,6 @@
 #include "display.h"
+
+#include <stdio.h>
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_pixels.h>
 #include <stdlib.h>
@@ -16,7 +18,6 @@ DisplayHandle createDisplay(SDL_Renderer* renderer) {
         SDL_TEXTUREACCESS_STATIC,
         DISPLAY_WIDTH,
         DISPLAY_HEIGHT);
-
     return display_handle;
 }
 
@@ -51,6 +52,21 @@ int flipPixel(DisplayHandle display_handle, const int x, const int y) {
     }
 }
 
+void printDisplay(DisplayHandle display_handle) {
+    printf("Display: \n\n\n\n");
+    for (int y = 0; y < DISPLAY_HEIGHT; y++) {
+        for (int x = 0; x < DISPLAY_WIDTH; x++) {
+            pixel_t pixel = display_handle->pixel_buffer[x + y * DISPLAY_WIDTH];
+            if (pixel == WHITE) {
+                printf(" # ");
+            } else {
+                printf(" _ ");
+            }
+        }
+        printf("\n");
+    }
+}
+
 pixel_t* getPixelBuffer(DisplayHandle display_handle) {
     return display_handle->pixel_buffer;
 }
@@ -62,7 +78,7 @@ bool updateDisplay(DisplayHandle display_handle) {
     if (!SDL_RenderClear(display_handle->sdl_renderer))
         return false;
 
-    if (!SDL_RenderTexture(display_handle->sdl_renderer, display_handle->sdl_texture,NULL,NULL))
+    if (!SDL_RenderTexture(display_handle->sdl_renderer, display_handle->sdl_texture,nullptr,nullptr))
         return false;
 
     if (!SDL_RenderPresent(display_handle->sdl_renderer))
