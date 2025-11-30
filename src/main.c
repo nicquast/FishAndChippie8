@@ -19,6 +19,7 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 400
 
+
 void instructionTick(Chip8System *system, DisplayHandle display_handle);
 
 int main(int argc, char **argv) {
@@ -48,6 +49,8 @@ int main(int argc, char **argv) {
 		return EXIT_FAILURE;
 	}
 
+	SDL_SetRenderScale(renderer, (float)WINDOW_WIDTH/DISPLAY_WIDTH, (float)WINDOW_HEIGHT/DISPLAY_HEIGHT);
+
 	DisplayHandle display_handle = createDisplay(renderer);
 	Chip8System chip8_system = initChip8System();
 
@@ -64,11 +67,13 @@ int main(int argc, char **argv) {
 
 	printf("Loaded ROM\n");
 
-	while (true) {
+	for (int i = 0; i < 10000; i++) {
 		instructionTick(&chip8_system, display_handle);
 		updateDisplay(display_handle);
 		usleep(1);
 	}
+
+	printDisplay(display_handle);
 
 	free(chip8_system.memory);
 	freeStack(&chip8_system.stack);
@@ -160,18 +165,22 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		// to the screen at X coord at VX and Y coord at VY, set pixels by flipping them. If we flip one from on to off
 		// by doing this set VF to 1.
 
+		// TODO: Need to make this more readable :(
+
 		// Get coordinates
-		int x_coord = system->register_store.gp_registers[x] % DISPLAY_WIDTH - 1;
-		int y_coord = system->register_store.gp_registers[y] % DISPLAY_HEIGHT - 1;
+		int x_coord = system->register_store.gp_registers[x] % (DISPLAY_WIDTH - 1);
+		int y_coord = system->register_store.gp_registers[y] % (DISPLAY_HEIGHT - 1);
 
 		mem_addr_t sprite_address = system->register_store.index_register;
+
 		// For each row
+		int vf = 0;
 		for (int i = 0; i < n; i++) {
 			byte_t sprite_row = system->memory[sprite_address + i];
 			// For each pixel in the sprite row
-			for (int j = 7; j > 0; j--) {
+			for (int j = 7; j >= 0; j--) {
 				//Skip to next row if we exceed the screen width
-				if (x_coord + j > DISPLAY_WIDTH)
+				if (x_coord + (7 - j) > DISPLAY_WIDTH)
 					break;
 
 				int bitmask = 0b1 << j;
@@ -182,14 +191,13 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 					continue;
 
 				// Flip the pixel on the display
-				int vf = flipPixel(display_handle, x_coord + i, y_coord);
-
-				// Set VF to 1 if we flipped a pixel from on to off
-				system->register_store.gp_registers[0xF] = vf;
+				vf = flipPixel(display_handle, x_coord + (7 - j), y_coord) || vf;
 			}
 			y_coord++;
 		}
 
+		// Set VF to 1 if we flipped a pixel from on to off
+		system->register_store.gp_registers[0xF] = vf;
 		break;
 	case 0xE:
 		// Skip if key
