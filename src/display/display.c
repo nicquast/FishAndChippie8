@@ -8,13 +8,15 @@
 #define WHITE 0xFFFFFFFF
 #define BLACK 0xFF000000
 
+#define PIXEL_FORMAT SDL_PIXELFORMAT_ARGB8888
+
 DisplayHandle createDisplay(SDL_Renderer* renderer) {
     DisplayHandle display_handle = malloc(sizeof(Display));
     clearDisplay(display_handle);
     display_handle->sdl_renderer = renderer;
     display_handle->sdl_texture = SDL_CreateTexture(
         renderer,
-        SDL_PIXELFORMAT_ARGB8888,
+        PIXEL_FORMAT,
         SDL_TEXTUREACCESS_STATIC,
         DISPLAY_WIDTH,
         DISPLAY_HEIGHT);
@@ -73,7 +75,8 @@ pixel_t* getPixelBuffer(DisplayHandle display_handle) {
 }
 
 bool updateDisplay(DisplayHandle display_handle) {
-    if (!SDL_UpdateTexture(display_handle->sdl_texture, NULL, display_handle->pixel_buffer, DISPLAY_WIDTH))
+    int pitch = DISPLAY_WIDTH * SDL_BYTESPERPIXEL(PIXEL_FORMAT);
+    if (!SDL_UpdateTexture(display_handle->sdl_texture, NULL, display_handle->pixel_buffer, pitch))
         return false;
 
     if (!SDL_RenderClear(display_handle->sdl_renderer))
