@@ -67,10 +67,17 @@ int main(int argc, char **argv) {
 
 	printf("Loaded ROM\n");
 
-	for (int i = 0; i < 10000; i++) {
+	bool quit = false;
+	SDL_Event event;
+	while (!quit) {
+		while (SDL_PollEvent(&event)) {
+			if (event.type == SDL_EVENT_QUIT)
+				quit = true;
+		}
+
 		instructionTick(&chip8_system, display_handle);
 		updateDisplay(display_handle);
-		usleep(1);
+		SDL_Delay(1);
 	}
 
 	printDisplay(display_handle);
