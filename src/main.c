@@ -20,7 +20,7 @@
 #define WINDOW_HEIGHT 400
 
 
-void instructionTick(Chip8System *system, DisplayHandle display_handle);
+bool instructionTick(Chip8System *system, DisplayHandle display_handle);
 
 int main(int argc, char **argv) {
 
@@ -75,12 +75,13 @@ int main(int argc, char **argv) {
 				quit = true;
 		}
 
-		instructionTick(&chip8_system, display_handle);
+		if (!instructionTick(&chip8_system, display_handle)) {
+		    quit = true;
+		    printf("undefined instruction encountered, exiting");
+		}
 		updateDisplay(display_handle);
 		SDL_Delay(1);
 	}
-
-	printDisplay(display_handle);
 
 	free(chip8_system.memory);
 	freeStack(&chip8_system.stack);
@@ -94,8 +95,9 @@ int main(int argc, char **argv) {
 	return EXIT_SUCCESS;
 }
 
-
-void instructionTick(Chip8System *system, DisplayHandle display_handle) {
+// Gets the next instruction and executes it.
+// returns false if an unknown instruction is encountered
+bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 	//Fetch next instruction (also increments PC)
 	instruction_t c_inst = fetchInstruction(system);
 
@@ -214,8 +216,9 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		// Lots of stuff going on with this first nibble...
 		break;
 	default:
-		//It shouldn't be possible to reach this
+		// Undefined instruction
+		return false;
 		break;
 	}
-
+    return true;
 }
