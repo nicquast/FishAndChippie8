@@ -120,6 +120,8 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 	int n = getN(c_inst);
 	byte_t nn = getNN(c_inst);
 	mem_addr_t nnn = getNNN(c_inst);
+	const byte_t vx = system->register_store.gp_registers[x];
+	const byte_t vy = system->register_store.gp_registers[y];
 
 	printf("Instruction: %x\n", c_inst);
 
@@ -147,17 +149,17 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		break;
 	case 0x3:
 		// Skip conditionally - Skip if VX = NN
-		if (system->register_store.gp_registers[x] == nn)
+		if (vx == nn)
 			system->register_store.program_counter += 2;
 		break;
 	case 0x4:
 		//Skip conditionally - Skip if VX !- NN
-		if (system->register_store.gp_registers[x] != nn)
+		if (vx != nn)
 			system->register_store.program_counter += 2;
 		break;
 	case 0x5:
 		//Skip conditionally - Skip if VX = VY
-		if (system->register_store.gp_registers[x] == system->register_store.gp_registers[y])
+		if (vx == vy)
 			system->register_store.program_counter += 2;
 		break;
 	case 0x6:
@@ -170,11 +172,79 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		break;
 	case 0x9:
 		//Skip conditionally - Skip if VX != VY
-		if (system->register_store.gp_registers[x] != system->register_store.gp_registers[y])
+		if (vx != vy)
 			system->register_store.program_counter += 2;
 		break;
 	case 0x8:
 		// Arithmatic - further decoding required
+		int result;
+		switch (n) {
+		case 0x0:
+			// Set VX to value of VY
+			system->register_store.gp_registers[x] = vy;
+			break;
+		case 0x1:
+			// Binary OR
+			system->register_store.gp_registers[x] = vx | vy;
+			break;
+		case 0x2:
+			// Binary AND
+			system->register_store.gp_registers[x] = vx & vy;
+			break;
+		case 0x3:
+			// Binary XOR
+			system->register_store.gp_registers[x] = vx ^ vy;
+			break;
+		case 0x4:
+			// Add VX to VY
+			result = (int)vx + (int)vy;
+
+			// Set flag register to 1 if it overflows and 0 if it doesn't
+			if (result > 255)
+				system->register_store.gp_registers[0xF] = 1;
+			else
+				system->register_store.gp_registers[0xF] = 0;
+
+			// set VX to result
+			system->register_store.gp_registers[x] = (byte_t) result;
+			break;
+		case 0x5:
+			// VX - VY
+			result = vx - vy;
+
+			// Set VF to 0 if we underflow and 1 if we don't
+			if (result < 0)
+				system->register_store.gp_registers[0xF] = 0;
+			else
+				system->register_store.gp_registers[0xF] = 1;
+
+			system->register_store.gp_registers[x] = (byte_t) result;
+			break;
+		case 0x7:
+			// VY - VX
+			result = vy - vx;
+
+			// Set VF to 0 if we underflow and 1 if we don't
+			if (result < 0)
+				system->register_store.gp_registers[0xF] = 0;
+			else
+				system->register_store.gp_registers[0xF] = 1;
+
+			system->register_store.gp_registers[x] = (byte_t) result;
+			break;
+		case 0x6:
+			// Shift right
+			const int right_bit = vx & 0b00000001;
+			system->register_store.gp_registers[0xF] = right_bit;
+			system->register_store.gp_registers[x] = (byte_t) (vx >> 1);
+			break;
+		case 0xE:
+			// Shift left
+			const int left_bit = vx >> 7;
+			system->register_store.gp_registers[0xF] = left_bit;
+			system->register_store.gp_registers[x] = (byte_t) (vx << 1);
+			break;
+		}
 		break;
 	case 0xA:
 		// Set index - set I to NNN
@@ -194,8 +264,8 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		// TODO: Need to make this more readable :(
 
 		// Get coordinates
-		int x_coord = system->register_store.gp_registers[x] % (DISPLAY_WIDTH - 1);
-		int y_coord = system->register_store.gp_registers[y] % (DISPLAY_HEIGHT - 1);
+		int x_coord = vx % (DISPLAY_WIDTH - 1);
+		int y_coord = vy % (DISPLAY_HEIGHT - 1);
 
 		mem_addr_t sprite_address = system->register_store.index_register;
 
