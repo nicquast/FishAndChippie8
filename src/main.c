@@ -132,7 +132,8 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 			clearDisplay(display_handle);
 		//00EE Return from subroutine / Pop off stack
 		if (n == 0xE) {
-
+			mem_addr_t return_address = stackPop(&system->stack);
+			system->register_store.program_counter = return_address;
 		}
 		break;
 	case 0x1:
