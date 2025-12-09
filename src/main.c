@@ -256,6 +256,8 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		break;
 	case 0xC:
 		// Random - random number & NN and places it in VX
+		byte_t random_number = rand();
+		system->register_store.gp_registers[x] = random_number & nn;
 		break;
 	case 0xD:
 		// Display - DXYN - Draw an N pixel tall sprite from memory location at I index register
