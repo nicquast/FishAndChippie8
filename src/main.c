@@ -252,6 +252,7 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		break;
 	case 0xB:
 		// Jump with offset - jump to NNN + V0
+		system->register_store.program_counter = nnn + system->register_store.gp_registers[0];
 		break;
 	case 0xC:
 		// Random - random number & NN and places it in VX
