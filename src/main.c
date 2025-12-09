@@ -247,6 +247,9 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 			system->register_store.gp_registers[0xF] = left_bit;
 			system->register_store.gp_registers[x] = (byte_t) (vx << 1);
 			break;
+		default:
+			//Undefined instruction
+			return false;
 		}
 		break;
 	case 0xA:
@@ -311,7 +314,6 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 	default:
 		// Undefined instruction
 		return false;
-		break;
 	}
     return true;
 }
