@@ -37,8 +37,6 @@ int flipPixel(DisplayHandle display_handle, int x, int y);
 // Get the pixel buffer from a given display handle
 pixel_t* getPixelBuffer(DisplayHandle display_handle);
 
-void printDisplay(DisplayHandle display_handle);
-
 // Update renderer attached to display to match current pixel grid
 // Returns true if successful, false if an SDL_Error has occurred
 bool updateDisplay(DisplayHandle);

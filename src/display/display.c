@@ -55,20 +55,6 @@ int flipPixel(DisplayHandle display_handle, const int x, const int y) {
     }
 }
 
-void printDisplay(DisplayHandle display_handle) {
-    printf("Display: \n\n\n\n");
-    for (int y = 0; y < DISPLAY_HEIGHT; y++) {
-        for (int x = 0; x < DISPLAY_WIDTH; x++) {
-            pixel_t pixel = display_handle->pixel_buffer[x + y * DISPLAY_WIDTH];
-            if (pixel == ON_COLOUR) {
-                printf(" # ");
-            } else {
-                printf(" _ ");
-            }
-        }
-        printf("\n");
-    }
-}
 
 pixel_t* getPixelBuffer(DisplayHandle display_handle) {
     return display_handle->pixel_buffer;

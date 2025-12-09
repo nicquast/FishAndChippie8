@@ -97,8 +97,6 @@ int main(int argc, char **argv) {
 		SDL_Delay(cycle_ms);
 	}
 
-	printDisplay(display_handle);
-
 	free(chip8_system.memory);
 	freeStack(&chip8_system.stack);
 	deleteDisplay(display_handle);
@@ -133,6 +131,9 @@ void instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		if (n == 0x0)
 			clearDisplay(display_handle);
 		//00EE Return from subroutine / Pop off stack
+		if (n == 0xE) {
+
+		}
 		break;
 	case 0x1:
 		// Jump to NNN
