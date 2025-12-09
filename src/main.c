@@ -51,6 +51,7 @@ int main(int argc, char **argv) {
 
 	SDL_SetRenderScale(renderer, (float)WINDOW_WIDTH/DISPLAY_WIDTH, (float)WINDOW_HEIGHT/DISPLAY_HEIGHT);
 
+	// Initialise Chip8 System
 	DisplayHandle display_handle = createDisplay(renderer);
 	Chip8System chip8_system = initChip8System();
 
@@ -69,15 +70,31 @@ int main(int argc, char **argv) {
 
 	bool quit = false;
 	SDL_Event event;
+
+	int timing_counter = 0;
 	while (!quit) {
+		constexpr int cycle_ms = 1;
+		constexpr int timing_tick_ms = 16;
+		// Handle SDL Events
 		while (SDL_PollEvent(&event)) {
 			if (event.type == SDL_EVENT_QUIT)
 				quit = true;
 		}
 
+		//Handle timing logic
+		if (timing_counter > timing_tick_ms) {
+			// Decrement timing registers down to 0
+			chip8_system.register_store.delay_timer -= (chip8_system.register_store.delay_timer > 0 ? 1 : 0);
+			chip8_system.register_store.sound_timer -= (chip8_system.register_store.sound_timer > 0 ? 1 : 0);
+			timing_counter = 0;
+		}
+		timing_counter ++;
+
+		// Handle system instructions
 		instructionTick(&chip8_system, display_handle);
 		updateDisplay(display_handle);
-		SDL_Delay(1);
+
+		SDL_Delay(cycle_ms);
 	}
 
 	printDisplay(display_handle);
