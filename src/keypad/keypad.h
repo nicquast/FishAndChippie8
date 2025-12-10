@@ -5,8 +5,10 @@
 #ifndef FISHANDCHIPPIE8_KEYPAD_H
 #define FISHANDCHIPPIE8_KEYPAD_H
 
-#include <SDL3/SDL_keyboard.h>
 #include <SDL3/SDL_scancode.h>
+
+
+#define KEYPAD_ARRAY_SIZE 0xF
 
 //Keymap
 // Maps Chip8 keypad to left side of the keyboard.
@@ -31,5 +33,8 @@ constexpr SDL_Scancode keymap[] = {
     SDL_SCANCODE_V
 };
 
+// Takes an array of length 0xF and assigns true or false depending on whether
+// that key on the 'keypad' is pressed
+void updateKeypad(bool* keypad);
 
 #endif //FISHANDCHIPPIE8_KEYPAD_H
