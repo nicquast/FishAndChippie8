@@ -8,6 +8,7 @@
 #include "../memory/memory.h"
 #include "../cpu/cpu.h"
 #include "../display/display.h"
+#include "../keypad/keypad.h"
 
 #define getNibble1(instruction) (instruction >> 12)
 #define getX(instruction) (instruction >> 8 & 0x0f)
@@ -18,11 +19,11 @@
 
 typedef u_int16_t instruction_t;
 
-//TODO: Move memory management duties to system and provide free function
 typedef struct {
     RegisterStore register_store;
     byte_t* memory;
     Stack stack;
+    bool keypad[KEYPAD_ARRAY_SIZE];
 } Chip8System;
 
 typedef struct {
@@ -30,7 +31,6 @@ typedef struct {
     pixel_t* pixel_buffer;
 } SaveState;
 
-Chip8System initChip8System();
 
 // Fetches the next instruction and increments PC
 instruction_t fetchInstruction(Chip8System *system);

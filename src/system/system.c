@@ -10,9 +10,11 @@ Chip8System initChip8System() {
     Chip8System system = {
         .memory = initMemory(),
         .register_store = initRegisterStore(),
-        .stack = {nullptr}
+        .stack = {nullptr},
+        .keypad = {}
     };
     system.register_store.program_counter = ROM_START_ADDRESS;
+    memset(system.keypad, false, KEYPAD_ARRAY_SIZE * sizeof(bool));
     return system;
 }
 
