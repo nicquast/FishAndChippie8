@@ -99,8 +99,7 @@ int main(int argc, char **argv) {
 		SDL_Delay(cycle_ms);
 	}
 
-	free(chip8_system.memory);
-	freeStack(&chip8_system.stack);
+	freeChip8SystemMemory(chip8_system);
 	deleteDisplay(display_handle);
 
 	SDL_DestroyWindow(window);
@@ -306,6 +305,15 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		break;
 	case 0xE:
 		// Skip if key
+		switch (nn) {
+		case 0x9E:
+			break;
+		case 0xA1:
+			break;
+		default:
+			//Undefined instruction
+			return false;
+		}
 		break;
 	case 0xF:
 		//Timers add to index, get key, font, binary-coded decimal conversion, store and load memory

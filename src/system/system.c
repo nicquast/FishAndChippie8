@@ -4,6 +4,7 @@
 
 #include "system.h"
 
+#include <stdlib.h>
 
 
 Chip8System initChip8System() {
@@ -16,6 +17,12 @@ Chip8System initChip8System() {
     system.register_store.program_counter = ROM_START_ADDRESS;
     memset(system.keypad, false, KEYPAD_ARRAY_SIZE * sizeof(bool));
     return system;
+}
+
+void freeChip8SystemMemory(Chip8System system) {
+    free(system.memory);
+    freeStack(&system.stack);
+    free(system.keypad);
 }
 
 instruction_t fetchInstruction(Chip8System *system) {

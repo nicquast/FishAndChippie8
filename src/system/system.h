@@ -31,6 +31,10 @@ typedef struct {
     pixel_t* pixel_buffer;
 } SaveState;
 
+Chip8System initChip8System();
+
+// Frees all memory allocated for the Chip8System struct
+void freeChip8SystemMemory(Chip8System chip8_system);
 
 // Fetches the next instruction and increments PC
 instruction_t fetchInstruction(Chip8System *system);
