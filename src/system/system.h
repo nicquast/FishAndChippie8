@@ -23,7 +23,7 @@ typedef struct {
     RegisterStore register_store;
     byte_t* memory;
     Stack stack;
-    bool keypad[KEYPAD_ARRAY_SIZE];
+    bool* keypad;
 } Chip8System;
 
 typedef struct {

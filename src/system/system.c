@@ -12,7 +12,7 @@ Chip8System initChip8System() {
         .memory = initMemory(),
         .register_store = initRegisterStore(),
         .stack = {nullptr},
-        .keypad = {}
+        .keypad = malloc(sizeof(bool) * KEYPAD_ARRAY_SIZE)
     };
     system.register_store.program_counter = ROM_START_ADDRESS;
     memset(system.keypad, false, KEYPAD_ARRAY_SIZE * sizeof(bool));
