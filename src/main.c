@@ -12,6 +12,7 @@
 #include "system/system.h"
 #include "memory/memory.h"
 #include "cpu/cpu.h"
+#include "keypad/keypad.h"
 
 #define SDL_FLAGS SDL_INIT_VIDEO
 
@@ -89,6 +90,9 @@ int main(int argc, char **argv) {
 			timing_counter = 0;
 		}
 		timing_counter ++;
+
+		//Get Keyboard Input
+		updateKeypad(chip8_system.keypad);
 
 		// Handle system instructions
 		if (!instructionTick(&chip8_system, display_handle)) {
@@ -307,8 +311,14 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		// Skip if key
 		switch (nn) {
 		case 0x9E:
+			// Skip if key in VX pressed
+			if (system->keypad[vx]) //TODO: protect against overflow
+				system->register_store.program_counter += 2;
 			break;
 		case 0xA1:
+			// Skip if key in VX is not pressed
+			if (!system->keypad[vx]) //TODO: protect against overflow
+				system->register_store.program_counter += 2;
 			break;
 		default:
 			//Undefined instruction
@@ -318,6 +328,46 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 	case 0xF:
 		//Timers add to index, get key, font, binary-coded decimal conversion, store and load memory
 		// Lots of stuff going on with this first nibble...
+		switch (nn) {
+		case 0x9E:
+			break;
+		case 0xA1:
+			break;
+		case 0x07:
+			break;
+		case 0x15:
+			break;
+		case 0x18:
+			break;
+		case 0x1E:
+			break;
+		case 0x0A:
+			// Get Key
+			bool key_pressed = false;
+			for (int key = 0; key < KEYPAD_ARRAY_SIZE; key++) {
+				if (system->keypad[key]) {
+					key_pressed = true;
+					system->register_store.gp_registers[x] = key;
+				}
+			}
+
+			// Block if no key is pressed
+			if (!key_pressed) {
+				system->register_store.program_counter -= 2;
+			}
+			break;
+		case 0x29:
+			break;
+		case 0x33:
+			break;
+		case 0x55:
+			break;
+		case 0x65:
+			break;
+		default:
+			// Undefined instruction
+			return false;
+		}
 		break;
 	default:
 		// Undefined instruction
