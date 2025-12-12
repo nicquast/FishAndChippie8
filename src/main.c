@@ -334,10 +334,13 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		case 0xA1:
 			break;
 		case 0x07:
+			system->register_store.gp_registers[x] = system->register_store.delay_timer;
 			break;
 		case 0x15:
+			system->register_store.delay_timer = system->register_store.gp_registers[x];
 			break;
 		case 0x18:
+			system->register_store.sound_timer = system->register_store.gp_registers[x];
 			break;
 		case 0x1E:
 			break;
