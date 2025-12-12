@@ -342,6 +342,7 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 			// Add VX to Index register
 			// Implementing Amiga interpreter to retain compatability wit Spaceflight 2091!
 			result = system->register_store.index_register + vx;
+			system->register_store.index_register = result;
 			if (result > 1000)
 				system->register_store.gp_registers[0xF] = 1;
 			break;
