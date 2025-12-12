@@ -329,10 +329,6 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		//Timers add to index, get key, font, binary-coded decimal conversion, store and load memory
 		// Lots of stuff going on with this first nibble...
 		switch (nn) {
-		case 0x9E:
-			break;
-		case 0xA1:
-			break;
 		case 0x07:
 			system->register_store.gp_registers[x] = system->register_store.delay_timer;
 			break;
@@ -343,6 +339,11 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 			system->register_store.sound_timer = system->register_store.gp_registers[x];
 			break;
 		case 0x1E:
+			// Add VX to Index register
+			// Implementing Amiga interpreter to retain compatability wit Spaceflight 2091!
+			result = system->register_store.index_register + vx;
+			if (result > 1000)
+				system->register_store.gp_registers[0xF] = 1;
 			break;
 		case 0x0A:
 			// Get Key
@@ -366,8 +367,17 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 		case 0x33:
 			break;
 		case 0x55:
+			// Store successive registers up to x into memory starting at the index register
+			for (int i = system->register_store.index_register; i <= x; i++)
+				system->memory[i] = system->register_store.gp_registers[i];
 			break;
 		case 0x65:
+			// Load memory into registers from the index register up to I + x
+			// TODO: Add configurable option on whether or not to increment I
+			// NOTE: Original COSMAC interpreter did increment, modern interpreters do not. default behaviour should be
+			// the more modern approach
+			for (int i = system->register_store.index_register; i <= x; i++)
+				system->register_store.gp_registers[i] = system->memory[i];
 			break;
 		default:
 			// Undefined instruction
