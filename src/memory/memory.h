@@ -9,6 +9,8 @@
 
 #define MEMORY_LENGTH 4096
 #define ROM_START_ADDRESS 0x200
+#define FONT_START_ADDRESS 0x0
+#define FONT_CHARACTER_OFFSET 5
 
 typedef u_int16_t mem_addr_t;
 typedef u_int8_t byte_t;

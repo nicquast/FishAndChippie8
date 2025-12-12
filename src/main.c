@@ -357,6 +357,8 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 			}
 			break;
 		case 0x29:
+			// Set Index register to the address of the hex digit in vx
+			system->register_store.index_register = vx * FONT_CHARACTER_OFFSET;
 			break;
 		case 0x33:
 			break;
