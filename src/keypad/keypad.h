@@ -8,7 +8,7 @@
 #include <SDL3/SDL_scancode.h>
 
 
-#define KEYPAD_ARRAY_SIZE 0xF
+#define KEYPAD_ARRAY_SIZE 16
 
 //Keymap
 // Maps Chip8 keypad to left side of the keyboard.
