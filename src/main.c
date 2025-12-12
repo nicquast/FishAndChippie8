@@ -5,7 +5,7 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
 #include <stdio.h>
-#include <stdbool.h>
+#include <math.h>
 #include <stdlib.h>
 #include <unistd.h>
 #include "display/display.h"
@@ -366,6 +366,12 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 			system->register_store.index_register = vx * FONT_CHARACTER_OFFSET;
 			break;
 		case 0x33:
+			// Store binary decimal representation of VX to i, i+1, i+2
+			const mem_addr_t index = system->register_store.index_register;
+			for (int i = 0; i <= 2; i++) {
+				const int divisor = i == 0 ? 1 : (int) pow(10, i);
+				system->memory[index + 2 - i] = vx / divisor % 10;
+			}
 			break;
 		case 0x55:
 			// Store successive registers up to x into memory starting at the index register

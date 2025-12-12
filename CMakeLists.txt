@@ -16,4 +16,4 @@ add_executable(FishAndChippie8
         src/system/system.h
         src/keypad/keypad.c
         src/keypad/keypad.h)
-target_link_libraries(FishAndChippie8 PRIVATE SDL3::SDL3)
+target_link_libraries(FishAndChippie8 PRIVATE SDL3::SDL3 m)
