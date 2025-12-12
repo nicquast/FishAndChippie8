@@ -9,6 +9,7 @@
 #include "../cpu/cpu.h"
 #include "../display/display.h"
 #include "../keypad/keypad.h"
+#include "../display/display.h"
 
 #define getNibble1(instruction) (instruction >> 12)
 #define getX(instruction) (instruction >> 8 & 0x0f)
@@ -38,5 +39,9 @@ void freeChip8SystemMemory(Chip8System chip8_system);
 
 // Fetches the next instruction and increments PC
 instruction_t fetchInstruction(Chip8System *system);
+
+// Executes the next instruction pointed to by the program counter
+// returns false if an undefined instruction is encountered.
+bool instructionTick(Chip8System *system, DisplayHandle display);
 
 #endif //FISHANDCHIPPIE8_SYSTEM_H
