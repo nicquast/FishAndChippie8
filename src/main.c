@@ -368,16 +368,21 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
 			break;
 		case 0x55:
 			// Store successive registers up to x into memory starting at the index register
-			for (int i = system->register_store.index_register; i <= x; i++)
-				system->memory[i] = system->register_store.gp_registers[i];
+			for (int i = 0; i <= x; i++) {
+				const mem_addr_t save_address = system->register_store.index_register + i;
+				system->memory[save_address] = system->register_store.gp_registers[i];
+			}
 			break;
 		case 0x65:
 			// Load memory into registers from the index register up to I + x
 			// TODO: Add configurable option on whether or not to increment I
 			// NOTE: Original COSMAC interpreter did increment, modern interpreters do not. default behaviour should be
 			// the more modern approach
-			for (int i = system->register_store.index_register; i <= x; i++)
-				system->register_store.gp_registers[i] = system->memory[i];
+			for (int i = 0; i <= x; i++) {
+				const mem_addr_t load_address = system->register_store.index_register + i;
+				system->register_store.gp_registers[i] = system->memory[load_address];
+			}
+
 			break;
 		default:
 			// Undefined instruction
