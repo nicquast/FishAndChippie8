@@ -5,7 +5,8 @@
 #include "system.h"
 
 #include <stdlib.h>
-
+#include <math.h>
+#include "../audio/audio.h"
 
 Chip8System initChip8System() {
     Chip8System system = {
@@ -16,6 +17,7 @@ Chip8System initChip8System() {
     };
     system.register_store.program_counter = ROM_START_ADDRESS;
     memset(system.keypad, false, KEYPAD_ARRAY_SIZE * sizeof(bool));
+	initSound();
     return system;
 }
 
@@ -36,6 +38,16 @@ instruction_t fetchInstruction(Chip8System *system) {
     system->register_store.program_counter += 2;
 
     return instruction;
+}
+
+// Fills audio buffer and plays beep sound if audio register is > 0
+void audioTick(Chip8System *system) {
+	updateSound();
+
+	if (system->register_store.sound_timer > 0)
+		toggleSound(true);
+	else
+		toggleSound(false);
 }
 
 // Gets the next instruction and executes it.

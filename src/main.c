@@ -14,7 +14,7 @@
 #include "cpu/cpu.h"
 #include "keypad/keypad.h"
 
-#define SDL_FLAGS SDL_INIT_VIDEO
+#define SDL_FLAGS (SDL_INIT_VIDEO | SDL_INIT_AUDIO)
 
 #define WINDOW_TITLE "Fish and Chippie 8"
 #define WINDOW_WIDTH 800
@@ -97,6 +97,7 @@ int main(int argc, char **argv) {
 			printf("undefined instruction encountered, exiting");
 		}
 		updateDisplay(display_handle);
+		audioTick(&chip8_system);
 		SDL_Delay(cycle_ms);
 	}
 

@@ -44,4 +44,6 @@ instruction_t fetchInstruction(Chip8System *system);
 // returns false if an undefined instruction is encountered.
 bool instructionTick(Chip8System *system, DisplayHandle display);
 
+// Makes / Stops making sound based on sound register.
+void audioTick(Chip8System *system);
 #endif //FISHANDCHIPPIE8_SYSTEM_H
