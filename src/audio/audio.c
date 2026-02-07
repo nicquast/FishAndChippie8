@@ -14,6 +14,8 @@
 SDL_AudioSpec audio_spec;
 SDL_AudioStream *audio_stream;
 
+bool sound_active = false;
+
 int current_sine_sample = 0;
 
 // SDL sound initialization
@@ -29,11 +31,15 @@ void initSound() {
 
 // Pause or unpause the audio
 void toggleSound(bool active) {
-    if (active) {
+    // If we've toggled from off to on play audio
+    if (active && !sound_active) {
         SDL_ResumeAudioStreamDevice(audio_stream);
-    } else {
+    }
+    // If we've toggled from on to off pause audio
+    else if (!active && sound_active) {
        SDL_PauseAudioStreamDevice(audio_stream);
     }
+    sound_active = active;
 }
 
 //Push new audio to the buffer
