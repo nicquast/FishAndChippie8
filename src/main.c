@@ -1,3 +1,8 @@
+#include "cpu/cpu.h"
+#include "display/display.h"
+#include "keypad/keypad.h"
+#include "memory/memory.h"
+#include "system/system.h"
 #include <SDL3/SDL.h>
 #include <SDL3/SDL_error.h>
 #include <SDL3/SDL_init.h>
@@ -5,14 +10,8 @@
 #include <SDL3/SDL_render.h>
 #include <SDL3/SDL_video.h>
 #include <stdio.h>
-#include <math.h>
 #include <stdlib.h>
 #include <unistd.h>
-#include "display/display.h"
-#include "system/system.h"
-#include "memory/memory.h"
-#include "cpu/cpu.h"
-#include "keypad/keypad.h"
 
 #define SDL_FLAGS (SDL_INIT_VIDEO | SDL_INIT_AUDIO)
 
@@ -22,92 +21,96 @@
 
 int main(int argc, char **argv) {
 
-	if (argc < 2) {
-		printf("Usage: %s [ROM file]\n", argv[0]);
-		return EXIT_FAILURE;
-	}
-	// Initialise SDL video components
-	if (!SDL_Init(SDL_FLAGS)) {
-		fprintf(stderr, "Error initialising SDL3: %s\n", SDL_GetError());
-		SDL_Quit();
-		return EXIT_FAILURE;
-	}
-	
-	SDL_Window *window = SDL_CreateWindow(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
-	if (!window) {
-		fprintf(stderr, "Error initialising SDL3 Window: %s\n", SDL_GetError());
-		SDL_Quit();
-		return EXIT_FAILURE;
-	}
-	
-	SDL_Renderer *renderer = SDL_CreateRenderer(window, nullptr);
-	if (!renderer) {
-		fprintf(stderr, "Error initialising SDL3 Renderer: %s\n", SDL_GetError());
-		SDL_Quit();
-		return EXIT_FAILURE;
-	}
+  if (argc < 2) {
+    printf("Usage: %s [ROM file]\n", argv[0]);
+    return EXIT_FAILURE;
+  }
+  // Initialise SDL video components
+  if (!SDL_Init(SDL_FLAGS)) {
+    fprintf(stderr, "Error initialising SDL3: %s\n", SDL_GetError());
+    SDL_Quit();
+    return EXIT_FAILURE;
+  }
 
-	SDL_SetRenderScale(renderer, (float)WINDOW_WIDTH/DISPLAY_WIDTH, (float)WINDOW_HEIGHT/DISPLAY_HEIGHT);
+  SDL_Window *window =
+      SDL_CreateWindow(WINDOW_TITLE, WINDOW_WIDTH, WINDOW_HEIGHT, 0);
+  if (!window) {
+    fprintf(stderr, "Error initialising SDL3 Window: %s\n", SDL_GetError());
+    SDL_Quit();
+    return EXIT_FAILURE;
+  }
 
-	// Initialise Chip8 System
-	DisplayHandle display_handle = createDisplay(renderer);
-	Chip8System chip8_system = initChip8System();
+  SDL_Renderer *renderer = SDL_CreateRenderer(window, NULL);
+  if (!renderer) {
+    fprintf(stderr, "Error initialising SDL3 Renderer: %s\n", SDL_GetError());
+    SDL_Quit();
+    return EXIT_FAILURE;
+  }
 
-	printf("Chip8 system initialised\n");
+  SDL_SetRenderScale(renderer, (float)WINDOW_WIDTH / DISPLAY_WIDTH,
+                     (float)WINDOW_HEIGHT / DISPLAY_HEIGHT);
 
-	//Load ROM
-	FILE *rom_fp = fopen(argv[1], "rb");
-	if (!rom_fp) {
-		fprintf(stderr, "Error opening ROM file: %s\n", argv[1]);
-		SDL_Quit();
-		return EXIT_FAILURE;
-	}
-	loadRom(rom_fp, chip8_system.memory);
+  // Initialise Chip8 System
+  DisplayHandle display_handle = createDisplay(renderer);
+  Chip8System chip8_system = initChip8System();
 
-	printf("Loaded ROM\n");
+  printf("Chip8 system initialised\n");
 
-	bool quit = false;
-	SDL_Event event;
+  // Load ROM
+  FILE *rom_fp = fopen(argv[1], "rb");
+  if (!rom_fp) {
+    fprintf(stderr, "Error opening ROM file: %s\n", argv[1]);
+    SDL_Quit();
+    return EXIT_FAILURE;
+  }
+  loadRom(rom_fp, chip8_system.memory);
 
-	int timing_counter = 0;
-	while (!quit) {
-		constexpr int cycle_ms = 1;
-		constexpr int timing_tick_ms = 16;
-		// Handle SDL Events
-		while (SDL_PollEvent(&event)) {
-			if (event.type == SDL_EVENT_QUIT)
-				quit = true;
-		}
+  printf("Loaded ROM\n");
 
-		//Handle timing logic
-		if (timing_counter > timing_tick_ms) {
-			// Decrement timing registers down to 0
-			chip8_system.register_store.delay_timer -= (chip8_system.register_store.delay_timer > 0 ? 1 : 0);
-			chip8_system.register_store.sound_timer -= (chip8_system.register_store.sound_timer > 0 ? 1 : 0);
-			timing_counter = 0;
-		}
-		timing_counter ++;
+  bool quit = false;
+  SDL_Event event;
 
-		//Get Keyboard Input
-		updateKeypad(chip8_system.keypad);
+  int timing_counter = 0;
+  while (!quit) {
+    const int cycle_ms = 1;
+    const int timing_tick_ms = 16;
+    // Handle SDL Events
+    while (SDL_PollEvent(&event)) {
+      if (event.type == SDL_EVENT_QUIT)
+        quit = true;
+    }
 
-		// Handle system instructions
-		if (!instructionTick(&chip8_system, display_handle)) {
-			quit = true;
-			printf("undefined instruction encountered, exiting");
-		}
-		updateDisplay(display_handle);
-		audioTick(&chip8_system);
-		SDL_Delay(cycle_ms);
-	}
+    // Handle timing logic
+    if (timing_counter > timing_tick_ms) {
+      // Decrement timing registers down to 0
+      chip8_system.register_store.delay_timer -=
+          (chip8_system.register_store.delay_timer > 0 ? 1 : 0);
+      chip8_system.register_store.sound_timer -=
+          (chip8_system.register_store.sound_timer > 0 ? 1 : 0);
+      timing_counter = 0;
+    }
+    timing_counter++;
 
-	freeChip8SystemMemory(chip8_system);
-	deleteDisplay(display_handle);
+    // Get Keyboard Input
+    updateKeypad(chip8_system.keypad);
 
-	SDL_DestroyWindow(window);
-	SDL_DestroyRenderer(renderer);
+    // Handle system instructions
+    if (!instructionTick(&chip8_system, display_handle)) {
+      quit = true;
+      printf("undefined instruction encountered, exiting");
+    }
+    updateDisplay(display_handle);
+    audioTick(&chip8_system);
+    SDL_Delay(cycle_ms);
+  }
 
-	SDL_Quit();
+  freeChip8SystemMemory(chip8_system);
+  deleteDisplay(display_handle);
 
-	return EXIT_SUCCESS;
+  SDL_DestroyWindow(window);
+  SDL_DestroyRenderer(renderer);
+
+  SDL_Quit();
+
+  return EXIT_SUCCESS;
 }
