@@ -63,7 +63,6 @@ bool instructionTick(Chip8System *system, DisplayHandle display_handle) {
   const byte_t vx = system->register_store.gp_registers[x];
   const byte_t vy = system->register_store.gp_registers[y];
 
-  printf("Instruction: %x\n", c_inst);
 
   // Choose behaviour based on first nibble
   switch (getNibble1(c_inst)) {
