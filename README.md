@@ -10,7 +10,7 @@ The project can be built with CMake. I've only tested this on x86_64 under Linux
 This project has SDL3 as a dependency.
 
 ```console
-cmake . && cmake --build
+cmake . && cmake --build .
 ```
 
 ## Usage
