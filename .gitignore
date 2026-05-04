@@ -1,1 +1,6 @@
 /roms/
+*.ch8
+CMakeCache.txt
+FishAndChippie8
+cmake_install.cmake
+CMakeFiles/

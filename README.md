@@ -15,5 +15,15 @@ cmake . && cmake --build
 
 ## Usage
 ```console
-FishAndChippie8 [PATH_TO_ROM]
+FishAndChippie8 -f [PATH_TO_ROM] -o [OFF_COLOUR_CODE] -x [ON_COLOUR_CODE]
+```
+> [!NOTE]
+> `-o` and `-x` are optional
+
+> [!IMPORTANT]
+> The colour codes must be provided either in a standard 24bit hex format or a 32bit ARGB hex format. They can optionally be prefixed with `#`.
+
+### Example
+```console
+FishAndChippie8 -f rom.ch8 -x #D7DEDC -o #4B475C
 ```

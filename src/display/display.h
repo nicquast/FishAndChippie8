@@ -9,18 +9,24 @@
 #define DISPLAY_HEIGHT 32
 #define DISPLAY_HZ 60
 
+#define DEFAULT_ON_COLOUR 0xFFFFFFFF
+#define DEFAULT_OFF_COLOUR 0xFF000000
+
 typedef u_int32_t pixel_t;
 
 typedef struct {
     pixel_t pixel_buffer[DISPLAY_WIDTH * DISPLAY_HEIGHT];
     SDL_Renderer *sdl_renderer;
     SDL_Texture *sdl_texture;
+    unsigned int on_colour;
+    unsigned int off_colour;
 } Display;
 
 typedef Display* DisplayHandle;
 
-// Initialise a display and return a handler for it
-DisplayHandle createDisplay(SDL_Renderer*);
+// Initialise a display and set it's on and off pixel colours
+// parameters: renderer, on_colour, off_colour
+DisplayHandle createDisplay(SDL_Renderer* renderer, unsigned int on_colour, unsigned int off_colour);
 
 // Clear the contents of a display
 void clearDisplay(DisplayHandle);
