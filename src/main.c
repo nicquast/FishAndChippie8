@@ -19,12 +19,39 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 400
 
-int main(int argc, char **argv) {
+void print_usage(char* prog_name);
 
-  if (argc < 2) {
-    printf("Usage: %s [ROM file]\n", argv[0]);
+int main(int argc, char **argv) {
+  int opt;
+  char* rom_filename = NULL;
+  unsigned int on_colour = DEFAULT_ON_COLOUR;
+  unsigned int off_colour = DEFAULT_OFF_COLOUR;
+
+  while ((opt = getopt(argc, argv, "f:o:x:h")) != -1) {
+    switch (opt) {
+      case 'f':
+        rom_filename = optarg;
+        break;
+      case 'o':
+        sscanf(optarg, "%x", &off_colour);
+        break;
+      case 'x':
+        sscanf(optarg, "%x", &on_colour);
+        break;
+      case 'h':
+        print_usage(argv[0]);
+        return EXIT_SUCCESS;
+      default:
+        print_usage(argv[0]);
+        return EXIT_FAILURE;
+    }
+  }
+
+  if (optind == 1) {
+    print_usage(argv[0]);
     return EXIT_FAILURE;
   }
+
   // Initialise SDL video components
   if (!SDL_Init(SDL_FLAGS)) {
     fprintf(stderr, "Error initialising SDL3: %s\n", SDL_GetError());
@@ -51,13 +78,13 @@ int main(int argc, char **argv) {
                      (float)WINDOW_HEIGHT / DISPLAY_HEIGHT);
 
   // Initialise Chip8 System
-  DisplayHandle display_handle = createDisplay(renderer);
+  DisplayHandle display_handle = createDisplay(renderer, on_colour, off_colour);
   Chip8System chip8_system = initChip8System();
 
   printf("Chip8 system initialised\n");
 
   // Load ROM
-  FILE *rom_fp = fopen(argv[1], "rb");
+  FILE *rom_fp = fopen(rom_filename, "rb");
   if (!rom_fp) {
     fprintf(stderr, "Error opening ROM file: %s\n", argv[1]);
     SDL_Quit();
@@ -113,4 +140,11 @@ int main(int argc, char **argv) {
   SDL_Quit();
 
   return EXIT_SUCCESS;
+}
+
+void print_usage(char* prog_name) {
+  printf("Usage: \n");
+  printf("%s -f [ROM file] -o [off_colour] -x [on_colour]\n", prog_name);
+  printf("-o: Off Colour - off pixel colour as a HEX value\n");
+  printf("-x: On Colour - on pixel colour as a HEX value\n");
 }
